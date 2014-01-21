@@ -1,5 +1,7 @@
 #include <SD.h>
 #include <SPI.h>
+#include <Streaming.h>
+
 #include "TFTv2.h"
 File bmpFile;
 
@@ -170,7 +172,7 @@ void loop()
 // is probably a good place
 
 
-#define BUFFPIXEL 20
+#define BUFFPIXEL 80
 
 void bmpdraw(File f, int x, int y)
 {
@@ -179,42 +181,44 @@ void bmpdraw(File f, int x, int y)
     uint32_t time = millis();
     uint16_t p;
     uint8_t g, b;
-    int i, j;
 
     uint8_t sdbuffer[3 * BUFFPIXEL];  // 3 * pixels to buffer
-    uint8_t buffidx = 3*BUFFPIXEL;
-
-
-    for (i=0; i< bmpHeight; i++)
+    //uint8_t buffidx = 3*BUFFPIXEL;
+    uint8_t buffidx = 0;
+    
+    cout << "bmpHeight = " << bmpHeight << endl;                // 320
+    cout << "bmpWidth  = " << bmpWidth << endl;                 // 240
+    
+    for (int i=0; i< bmpHeight; i++)
     {
-
-        for (j=bmpWidth-1; j>=0; j--)
+    
+        for(int j=0; j<3; j++)
         {
-            // read more pixels
-            if (buffidx >= 3*BUFFPIXEL)
+            bmpFile.read(sdbuffer, 3*BUFFPIXEL);
+            buffidx = 0;
+            int offset_x = j*80;
+            
+            for(int k=0; k<80; k++)
             {
-                bmpFile.read(sdbuffer, 3*BUFFPIXEL);
-                buffidx = 0;
+                b = sdbuffer[buffidx++];     // blue
+                g = sdbuffer[buffidx++];     // green
+                p = sdbuffer[buffidx++];     // red
+
+                p >>= 3;
+                p <<= 6;
+
+                g >>= 2;
+                p |= g;
+                p <<= 5;
+
+                b >>= 3;
+                p |= b;
+
+                // write out the 16 bits of color
+                Tft.setPixel(k+offset_x, i, p);
             }
-
-            // convert pixel from 888 to 565
-            b = sdbuffer[buffidx++];     // blue
-            g = sdbuffer[buffidx++];     // green
-            p = sdbuffer[buffidx++];     // red
-
-            p >>= 3;
-            p <<= 6;
-
-            g >>= 2;
-            p |= g;
-            p <<= 5;
-
-            b >>= 3;
-            p |= b;
-
-            // write out the 16 bits of color
-            Tft.setPixel(j,i,p);
         }
+        
     }
     Serial.print(millis() - time, DEC);
     Serial.println(" ms");

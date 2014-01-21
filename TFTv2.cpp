@@ -26,65 +26,6 @@
 #define FONT_X 8
 #define FONT_Y 8
 
-void TFT::sendCMD(INT8U index)
-{
-    TFT_DC_LOW;
-    TFT_CS_LOW;
-    SPI.transfer(index);
-    TFT_CS_HIGH;
-}
-
-void TFT::WRITE_DATA(INT8U data)
-{
-    TFT_DC_HIGH;
-    TFT_CS_LOW;
-    SPI.transfer(data);
-    TFT_CS_HIGH;
-}
-
-void TFT::sendData(INT16U data)
-{
-    INT8U data1 = data>>8;
-    INT8U data2 = data&0xff;
-    TFT_DC_HIGH;
-    TFT_CS_LOW;
-    SPI.transfer(data1);
-    SPI.transfer(data2);
-    TFT_CS_HIGH;
-}
-
-void TFT::WRITE_Package(INT16U *data, INT8U howmany)
-{
-    INT16U  data1 = 0;
-    INT8U   data2 = 0;
-
-    TFT_DC_HIGH;
-    TFT_CS_LOW;
-    INT8U count=0;
-    for(count=0;count<howmany;count++)
-    {
-        data1 = data[count]>>8;
-        data2 = data[count]&0xff;
-        SPI.transfer(data1);
-        SPI.transfer(data2);
-    }
-    TFT_CS_HIGH;
-}
-
-INT8U TFT::Read_Register(INT8U Addr, INT8U xParameter)
-{
-    INT8U data=0;
-    sendCMD(0xd9);                                                      /* ext command                  */
-    WRITE_DATA(0x10+xParameter);                                        /* 0x11 is the first Parameter  */
-    TFT_DC_LOW;
-    TFT_CS_LOW;
-    SPI.transfer(Addr);
-    TFT_DC_HIGH;
-    data = SPI.transfer(0);
-    TFT_CS_HIGH;
-    return data;
-}
-
 void TFT::TFTinit (void)
 {
     SPI.begin();
@@ -314,7 +255,17 @@ void TFT::setXY(INT16U poX, INT16U poY)
 
 void TFT::setPixel(INT16U poX, INT16U poY,INT16U color)
 {
-    setXY(poX, poY);
+
+    sendCMD(0x2A);                                                      /* Column Command address       */
+    sendData(poX);
+    sendData(poX);
+
+    sendCMD(0x2B);                                                      /* Column Command address       */
+    sendData(poY);
+    sendData(poY);
+    
+    sendCMD(0x2c);
+
     sendData(color);
 }
 
