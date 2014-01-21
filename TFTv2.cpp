@@ -29,6 +29,7 @@
 void TFT::TFTinit (void)
 {
     SPI.begin();
+    
     TFT_CS_HIGH;
     TFT_DC_HIGH;
     INT8U i=0, TFTDriver=0;

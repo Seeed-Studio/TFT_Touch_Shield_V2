@@ -1,31 +1,43 @@
+/*
+  TFT Touch Shield 2.0 examples - tftbmp2
+  
+  loovee
+  2013-1-21
+  
+  this demo can show all bmp file in root Directory of SD card
+  please ensure that your image file is 320x240 size. 
+
+  MAX_BMP can config the max file to display
+  FILENAME_LEN can config the max length of file name
+  
+*/
+
 #include <SD.h>
 #include <SPI.h>
 #include <Streaming.h>
 
 #include "TFTv2.h"
+
+
+#define MAX_BMP         10                      // bmp file num
+#define FILENAME_LEN    20                      // max file name length
+
+const int PIN_SD_CS = 4;                        // pin of sd card
+
+const int __Gnbmp_height = 320;                 // bmp hight
+const int __Gnbmp_width  = 240;                 // bmp width
+
+unsigned char __Gnbmp_image_offset  = 0;;
+
+
+int __Gnfile_num = 0;                           // num of file
+char __Gsbmp_files[MAX_BMP][FILENAME_LEN];      // file name
+
+
 File bmpFile;
 
-unsigned char saved_spimode;
-int bmpWidth, bmpHeight;
-uint8_t bmpDepth, bmpImageoffset;
 
-#define chipSelect 4
-
-//set up variables using the SD utility library functions:
-Sd2Card card;
-SdVolume volume;
-SdFile root;
-
-File root2;
-
-#define MAX_BMP         10              // bmp file num
-#define FILENAME_LEN    20              // max file name length
-
-int file_num = 0;
-
-char bmpfiles[MAX_BMP][FILENAME_LEN];
-
-
+// if bmp file return 1, else return 0
 bool checkBMP(char *_name, char r_name[])
 {
     int len = 0;
@@ -42,6 +54,7 @@ bool checkBMP(char *_name, char r_name[])
 
     if(len < 5)return false;
 
+    // if xxx.bmp or xxx.BMP
     if( r_name[len-4] == '.' \
         && (r_name[len-3] == 'b' || (r_name[len-3] == 'B')) \
         && (r_name[len-2] == 'm' || (r_name[len-2] == 'M')) \
@@ -54,25 +67,21 @@ bool checkBMP(char *_name, char r_name[])
 
 }
 
-void printDirectory(File dir, int numTabs)
+// search root to find bmp file
+void searchDirectory()
 {
+    File root = SD.open("/");                       // root
     while(true) 
     {
-
-        File entry =  dir.openNextFile();
+        File entry =  root.openNextFile();
+        
         if (! entry)
         {
             break;
         }
-        for (uint8_t i=0; i<numTabs; i++)
-        {
-            Serial.print('\t');
-        }
 
         if(!entry.isDirectory())
         {
-            // Serial.println(entry.name());
-
             char *ptmp = entry.name();
 
             char __Name[20];
@@ -81,84 +90,69 @@ void printDirectory(File dir, int numTabs)
             {
                 Serial.println(__Name);
 
-                strcpy(bmpfiles[file_num++], __Name);
+                strcpy(__Gsbmp_files[__Gnfile_num++], __Name);
             }
         }
         entry.close();
     }
     
     Serial.print("get ");
-    Serial.print(file_num);
+    Serial.print(__Gnfile_num);
     Serial.println(" file: ");
     
-    for(int i=0; i<file_num; i++)
+    for(int i=0; i<__Gnfile_num; i++)
     {
-        Serial.println(bmpfiles[i]);
+        Serial.println(__Gsbmp_files[i]);
     }
 }
 
 
-
 void setup()
 {
-    pinMode(11,INPUT);
-    pinMode(12,INPUT);
-    pinMode(13,INPUT);
-    TFT_CS_HIGH;
-    pinMode(chipSelect,OUTPUT);
-    digitalWrite(chipSelect,HIGH);
 
-    Serial.begin(38400);
-    SPI.begin();
+    Serial.begin(9600);
+    
+    pinMode(PIN_SD_CS,OUTPUT);
+    digitalWrite(PIN_SD_CS,HIGH);
+
     Tft.TFTinit();
-    //SPI.setClockDivider(SPI_CLOCK_DIV4);
-    //SDcard_info();
-    /**/
-    DDRB |= 0x04;
-    card.init(SPI_FULL_SPEED,chipSelect);//SPI_QUARTER_SPEED   SPI_HALF_SPEED, SPI_FULL_SPEED,
-    if(!SD.begin(chipSelect))//SPI_QUARTER_SPEED,
-    { //53 is used as chip select pin
+
+    Sd2Card card;
+    card.init(SPI_FULL_SPEED, PIN_SD_CS); 
+    
+    if(!SD.begin(PIN_SD_CS))              
+    { 
         Serial.println("failed!");
-        while(1);
+        while(1);                               // init fail, die here
     }
+    
     Serial.println("SD OK!");
+    
+    searchDirectory();
 
-
-    root2 = SD.open("/");
-
-    printDirectory(root2, 0);
-
-    Tft.setCol(0,239);
-    Tft.setPage(0,319);
-    Tft.sendCMD(0x2c);//start to write to display ram
     TFT_BL_ON;
 }
 
 void loop()
 {
-
-    for(unsigned char i=0; i<file_num; i++)
+    for(unsigned char i=0; i<__Gnfile_num; i++)
     {
-        //TFT_BL_OFF;
-        bmpFile = SD.open(bmpfiles[i]);
+        bmpFile = SD.open(__Gsbmp_files[i]);
         if (! bmpFile)
         {
             Serial.println("didnt find image");
             while (1);
         }
 
-        if (! bmpReadHeader(bmpFile)) {
+        if(! bmpReadHeader(bmpFile)) 
+        {
             Serial.println("bad bmp");
             return;
         }
 
-        Serial.print("image size ");
-        Serial.print(bmpWidth, DEC);
-        Serial.print(", ");
-        Serial.println(bmpHeight, DEC);
         bmpdraw(bmpFile, 0, 0);
         bmpFile.close();
-        //TFT_BL_ON;
+
         delay(1000);
     }
 
@@ -171,93 +165,37 @@ void loop()
 // more RAM but makes the drawing a little faster. 20 pixels' worth
 // is probably a good place
 
-
-#define BUFFPIXEL 60
+#define BUFFPIXEL       60                      // must be a divisor of 240 
+#define BUFFPIXEL_X3    180                     // BUFFPIXELx3
 
 void bmpdraw(File f, int x, int y)
 {
-    bmpFile.seek(bmpImageoffset);
+    bmpFile.seek(__Gnbmp_image_offset);
 
     uint32_t time = millis();
-    uint16_t p;
-    uint8_t g, b;
 
-    uint8_t sdbuffer[3 * BUFFPIXEL];  // 3 * pixels to buffer
-    //uint8_t buffidx = 3*BUFFPIXEL;
-    uint8_t buffidx = 0;
-    
-    cout << "bmpHeight = " << bmpHeight << endl;                // 320
-    cout << "bmpWidth  = " << bmpWidth << endl;                 // 240
- 
-#if 0 
-    for (int i=0; i< bmpHeight; i++)
-    {
+    uint8_t sdbuffer[BUFFPIXEL_X3];                 // 3 * pixels to buffer
 
-        for(int j=0; j<3; j++)
-        {
-            bmpFile.read(sdbuffer, 3*BUFFPIXEL);
-            buffidx = 0;
-            int offset_x = j*BUFFPIXEL;
-            
-            for(int k=0; k<BUFFPIXEL; k++)
-            {
-                b = sdbuffer[buffidx++];     // blue
-                g = sdbuffer[buffidx++];     // green
-                p = sdbuffer[buffidx++];     // red
-
-                p >>= 3;
-                p <<= 6;
-
-                g >>= 2;
-                p |= g;
-                p <<= 5;
-
-                b >>= 3;
-                p |= b;
-
-                // write out the 16 bits of color
-                Tft.setPixel(k+offset_x, i, p);
-            }
-        }
-        
-    }
-#else
-    for (int i=0; i< bmpHeight; i++)
+    for (int i=0; i< __Gnbmp_height; i++)
     {
 
         for(int j=0; j<(240/BUFFPIXEL); j++)
         {
-            bmpFile.read(sdbuffer, 3*BUFFPIXEL);
-            buffidx = 0;
+            bmpFile.read(sdbuffer, BUFFPIXEL_X3);
+            uint8_t buffidx = 0;
             int offset_x = j*BUFFPIXEL;
             
             unsigned int __color[BUFFPIXEL];
             
             for(int k=0; k<BUFFPIXEL; k++)
             {
-                b = sdbuffer[buffidx++];     // blue
-                g = sdbuffer[buffidx++];     // green
-                p = sdbuffer[buffidx++];     // red
-
-                p >>= 3;
-                p <<= 6;
-
-                g >>= 2;
-                p |= g;
-                p <<= 5;
-
-                b >>= 3;
-                p |= b;
+                __color[k] = sdbuffer[buffidx+2]>>3;                        // read
+                __color[k] = __color[k]<<6 | (sdbuffer[buffidx+1]>>2);      // green
+                __color[k] = __color[k]<<5 | (sdbuffer[buffidx+0]>>3);      // blue
                 
-                __color[k] = p;
+                buffidx += 3;
             }
-            
-            /*
-            for(int m=0; m<BUFFPIXEL; m++)
-            {
-                Tft.setPixel(m+offset_x, i, __color[m]);
-            }*/
-            
+
             Tft.setCol(offset_x, offset_x+BUFFPIXEL);
             Tft.setPage(i, i);
             Tft.sendCMD(0x2c);                                                  
@@ -272,19 +210,20 @@ void bmpdraw(File f, int x, int y)
             }
 
             TFT_CS_HIGH;
-    
         }
         
     }
-#endif
+    
     Serial.print(millis() - time, DEC);
     Serial.println(" ms");
 }
 
-boolean bmpReadHeader(File f) {
+boolean bmpReadHeader(File f) 
+{
     // read header
     uint32_t tmp;
-
+    uint8_t bmpDepth;
+    
     if (read16(f) != 0x4D42) {
         // magic bytes missing
         return false;
@@ -298,17 +237,23 @@ boolean bmpReadHeader(File f) {
     // read and ignore creator bytes
     read32(f);
 
-    bmpImageoffset = read32(f);
+    __Gnbmp_image_offset = read32(f);
     Serial.print("offset ");
-    Serial.println(bmpImageoffset, DEC);
+    Serial.println(__Gnbmp_image_offset, DEC);
 
     // read DIB header
     tmp = read32(f);
     Serial.print("header size ");
     Serial.println(tmp, DEC);
-    bmpWidth = read32(f);
-    bmpHeight = read32(f);
-
+    
+    
+    int bmp_width = read32(f);
+    int bmp_height = read32(f);
+    
+    if(bmp_width != __Gnbmp_width || bmp_height != __Gnbmp_height)      // if image is not 320x240, return false
+    {
+        return false;
+    }
 
     if (read16(f) != 1)
     return false;

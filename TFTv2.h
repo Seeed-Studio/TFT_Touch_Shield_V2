@@ -125,8 +125,7 @@ public:
         SPI.transfer(index);
         TFT_CS_HIGH;
     }
-    
-    
+
     inline void WRITE_DATA(INT8U data)
     {
         TFT_DC_HIGH;
