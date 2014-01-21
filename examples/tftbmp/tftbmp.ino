@@ -95,16 +95,15 @@ void bmpdraw(File f, int x, int y)
   uint32_t time = millis();
   uint16_t p;
   uint8_t g, b;
-  int i, j;
 
   uint8_t sdbuffer[3 * BUFFPIXEL];  // 3 * pixels to buffer
   uint8_t buffidx = 3*BUFFPIXEL;
 
 
-  for (i=0; i< bmpHeight; i++) 
+  for (int i=0; i< bmpHeight; i++) 
   {
 
-    for (j=bmpWidth; j>0; j--) 
+    for (int j=bmpWidth-1; j>=0; j--) 
     {
       // read more pixels
       if (buffidx >= 3*BUFFPIXEL) 
