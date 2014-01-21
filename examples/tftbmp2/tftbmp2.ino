@@ -172,7 +172,7 @@ void loop()
 // is probably a good place
 
 
-#define BUFFPIXEL 80
+#define BUFFPIXEL 60
 
 void bmpdraw(File f, int x, int y)
 {
@@ -188,17 +188,18 @@ void bmpdraw(File f, int x, int y)
     
     cout << "bmpHeight = " << bmpHeight << endl;                // 320
     cout << "bmpWidth  = " << bmpWidth << endl;                 // 240
-    
+ 
+#if 0 
     for (int i=0; i< bmpHeight; i++)
     {
-    
+
         for(int j=0; j<3; j++)
         {
             bmpFile.read(sdbuffer, 3*BUFFPIXEL);
             buffidx = 0;
-            int offset_x = j*80;
+            int offset_x = j*BUFFPIXEL;
             
-            for(int k=0; k<80; k++)
+            for(int k=0; k<BUFFPIXEL; k++)
             {
                 b = sdbuffer[buffidx++];     // blue
                 g = sdbuffer[buffidx++];     // green
@@ -220,6 +221,62 @@ void bmpdraw(File f, int x, int y)
         }
         
     }
+#else
+    for (int i=0; i< bmpHeight; i++)
+    {
+
+        for(int j=0; j<(240/BUFFPIXEL); j++)
+        {
+            bmpFile.read(sdbuffer, 3*BUFFPIXEL);
+            buffidx = 0;
+            int offset_x = j*BUFFPIXEL;
+            
+            unsigned int __color[BUFFPIXEL];
+            
+            for(int k=0; k<BUFFPIXEL; k++)
+            {
+                b = sdbuffer[buffidx++];     // blue
+                g = sdbuffer[buffidx++];     // green
+                p = sdbuffer[buffidx++];     // red
+
+                p >>= 3;
+                p <<= 6;
+
+                g >>= 2;
+                p |= g;
+                p <<= 5;
+
+                b >>= 3;
+                p |= b;
+                
+                __color[k] = p;
+            }
+            
+            /*
+            for(int m=0; m<BUFFPIXEL; m++)
+            {
+                Tft.setPixel(m+offset_x, i, __color[m]);
+            }*/
+            
+            Tft.setCol(offset_x, offset_x+BUFFPIXEL);
+            Tft.setPage(i, i);
+            Tft.sendCMD(0x2c);                                                  
+            
+            TFT_DC_HIGH;
+            TFT_CS_LOW;
+
+            for(int m=0; m < BUFFPIXEL; m++)
+            {
+                SPI.transfer(__color[m]>>8);
+                SPI.transfer(__color[m]);
+            }
+
+            TFT_CS_HIGH;
+    
+        }
+        
+    }
+#endif
     Serial.print(millis() - time, DEC);
     Serial.println(" ms");
 }
