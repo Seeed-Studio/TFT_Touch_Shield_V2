@@ -55,7 +55,7 @@ void TFT::sendData(INT16U data)
 
 void TFT::WRITE_Package(INT16U *data, INT8U howmany)
 {
-    INT16U    data1 = 0;
+    INT16U  data1 = 0;
     INT8U   data2 = 0;
 
     TFT_DC_HIGH;
@@ -270,9 +270,8 @@ void TFT::fillScreen(INT16U XL, INT16U XR, INT16U YU, INT16U YD, INT16U color)
 
     Tft.setCol(XL,XR);
     Tft.setPage(YU, YD);
-    Tft.sendCMD(0x2c);                                                  /* start to write to display ra */
-                                                                        /* m                            */
-
+    Tft.sendCMD(0x2c);                                                  
+    
     TFT_DC_HIGH;
     TFT_CS_LOW;
 
@@ -291,8 +290,7 @@ void TFT::fillScreen(void)
 {
     Tft.setCol(0, 239);
     Tft.setPage(0, 319);
-    Tft.sendCMD(0x2c);                                                  /* start to write to display ra */
-                                                                        /* m                            */
+    Tft.sendCMD(0x2c);                                                  /* start to write to display ram */
 
     TFT_DC_HIGH;
     TFT_CS_LOW;
@@ -382,7 +380,8 @@ void TFT::drawLine( INT16U x0,INT16U y0,INT16U x1, INT16U y1,INT16U color)
     int dx = abs(x), sx = x0<x1 ? 1 : -1;
     int dy = -abs(y), sy = y0<y1 ? 1 : -1;
     int err = dx+dy, e2;                                                /* error value e_xy             */
-    for (;;){                                                           /* loop                         */
+    for (;;)
+    {                                                                   /* loop                         */
         setPixel(x0,y0,color);
         e2 = 2*err;
         if (e2 >= dy) {                                                 /* e_xy+e_x > 0                 */
@@ -394,7 +393,6 @@ void TFT::drawLine( INT16U x0,INT16U y0,INT16U x1, INT16U y1,INT16U color)
             err += dx; y0 += sy;
         }
     }
-
 }
 
 void TFT::drawVerticalLine( INT16U poX, INT16U poY, INT16U length,INT16U color)
@@ -412,7 +410,6 @@ void TFT::drawRectangle(INT16U poX, INT16U poY, INT16U length, INT16U width,INT1
     drawHorizontalLine(poX, poY+width, length, color);
     drawVerticalLine(poX, poY, width,color);
     drawVerticalLine(poX + length, poY, width,color);
-
 }
 
 void TFT::drawCircle(int poX, int poY, int r,INT16U color)

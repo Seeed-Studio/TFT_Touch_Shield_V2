@@ -28,24 +28,27 @@ bool checkBMP(char *_name, char r_name[])
 {
     int len = 0;
 
+    if(NULL == _name)return false;
+    
     while(*_name)
     {
         r_name[len++] = *(_name++);
+        if(len>FILENAME_LEN)return false;
     }
 
     r_name[len] = '\0';
 
-    if(len < 5)return 0;
+    if(len < 5)return false;
 
     if( r_name[len-4] == '.' \
         && (r_name[len-3] == 'b' || (r_name[len-3] == 'B')) \
         && (r_name[len-2] == 'm' || (r_name[len-2] == 'M')) \
         && (r_name[len-1] == 'p' || (r_name[len-1] == 'P')) )
     {
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 
 }
 
@@ -108,7 +111,7 @@ void setup()
     Tft.TFTinit();
     //SPI.setClockDivider(SPI_CLOCK_DIV4);
     //SDcard_info();
-  /**/
+    /**/
     DDRB |= 0x04;
     card.init(SPI_FULL_SPEED,chipSelect);//SPI_QUARTER_SPEED   SPI_HALF_SPEED, SPI_FULL_SPEED,
     if(!SD.begin(chipSelect))//SPI_QUARTER_SPEED,
