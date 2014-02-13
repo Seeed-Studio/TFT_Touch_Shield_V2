@@ -36,3 +36,8 @@ Benefiting from local manufacture power and convenient global logistic system, <
 we integrate resources to serve new era of innovation. Seeed also works with <br>
 global distributors and partners to push open hardware movement.<br>
 
+
+
+
+
+[![Analytics](https://ga-beacon.appspot.com/UA-46589105-3/TFT_Touch_Shield_V2)](https://github.com/igrigorik/ga-beacon)
