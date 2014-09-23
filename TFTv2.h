@@ -52,7 +52,16 @@
 #define MAX_X	239
 #define MAX_Y	319
 
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#if defined(__LINKIT_ONE__)
+
+#define TFT_DC_LOW      digitalWrite(6, LOW)
+#define TFT_DC_HIGH     digitalWrite(6, HIGH)
+#define TFT_CS_LOW      digitalWrite(5, LOW)
+#define TFT_CS_HIGH     digitalWrite(5, HIGH)
+#define TFT_BL_OFF      digitalWrite(4, LOW)
+#define TFT_BL_ON       digitalWrite(4, HIGH)
+
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
 #define TFT_CS_LOW  {DDRE |= 0x08;PORTE &=~ 0x08;}
 #define TFT_CS_HIGH {DDRE |= 0x08;PORTE |=  0x08;}
@@ -103,8 +112,9 @@
 #ifndef INT8U
 #define INT8U unsigned char
 #endif
+
 #ifndef INT16U
-#define INT16U unsigned int
+#define INT16U unsigned short
 #endif
 
 extern INT8U simpleFont[][8];

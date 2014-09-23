@@ -26,17 +26,33 @@
 #define FONT_X 8
 #define FONT_Y 8
 
+#if defined(__LINKIT_ONE__)
+uint8_t bg_buffer[153600];
+#endif
+
+
 void TFT::TFTinit (void)
 {
     SPI.begin();
     
+#if defined(__LINKIT_ONE__)
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
+    pinMode(7, OUTPUT);
+    digitalWrite(5, LOW);
+    digitalWrite(7, HIGH);     
+#endif
+    
     TFT_CS_HIGH;
     TFT_DC_HIGH;
+    
     INT8U i=0, TFTDriver=0;
     for(i=0;i<3;i++)
     {
         TFTDriver = readID();
     }
+
     delay(500);
     sendCMD(0x01);
     delay(200);
@@ -147,6 +163,11 @@ void TFT::TFTinit (void)
 
 INT8U TFT::readID(void)
 {
+
+#if defined(__LINKIT_ONE__)
+    return 1;
+#endif
+
     INT8U i=0;
     INT8U data[3] ;
     INT8U ID[3] = {0x00, 0x93, 0x41};
@@ -159,6 +180,7 @@ INT8U TFT::readID(void)
             ToF=0;
         }
     }
+    
     if(!ToF)                                                            /* data!=ID                     */
     {
         Serial.print("Read TFT ID failed, ID should be 0x09341, but read ID = 0x");
@@ -168,6 +190,7 @@ INT8U TFT::readID(void)
         }
         Serial.println();
     }
+
     return ToF;
 }
 
@@ -187,8 +210,7 @@ void TFT::setPage(INT16U StartPage,INT16U EndPage)
 
 void TFT::fillScreen(INT16U XL, INT16U XR, INT16U YU, INT16U YD, INT16U color)
 {
-    unsigned long  XY=0;
-    unsigned long i=0;
+    unsigned long  XY = 0;
 
     if(XL > XR)
     {
@@ -202,40 +224,63 @@ void TFT::fillScreen(INT16U XL, INT16U XR, INT16U YU, INT16U YD, INT16U color)
         YD = YU^YD;
         YU = YU^YD;
     }
+    
     XL = constrain(XL, MIN_X,MAX_X);
     XR = constrain(XR, MIN_X,MAX_X);
     YU = constrain(YU, MIN_Y,MAX_Y);
     YD = constrain(YD, MIN_Y,MAX_Y);
 
+    
     XY = (XR-XL+1);
     XY = XY*(YD-YU+1);
 
-    Tft.setCol(XL,XR);
+    Tft.setCol(XL, XR);
     Tft.setPage(YU, YD);
     Tft.sendCMD(0x2c);                                                  
     
     TFT_DC_HIGH;
     TFT_CS_LOW;
 
-    INT8U Hcolor = color>>8;
+    INT8U Hcolor = (color>>8)&0xff;
     INT8U Lcolor = color&0xff;
-    for(i=0; i < XY; i++)
+
+#if defined(__LINKIT_ONE__)
+
+    for(unsigned long i=0; i<XY; i++)
+    {
+        bg_buffer[2*i]   = Hcolor;
+        bg_buffer[2*i+1] = Lcolor;
+    }
+    
+    SPI.write(bg_buffer, 2*XY);
+#else
+
+    for(unsigned long i=0; i < XY; i++)
     {
         SPI.transfer(Hcolor);
         SPI.transfer(Lcolor);
     }
-
+#endif
+  
+    
     TFT_CS_HIGH;
 }
 
 void TFT::fillScreen(void)
 {
+#if defined(__LINKIT_ONE__)
+	memset(bg_buffer, 0, 153600);
+#endif
     Tft.setCol(0, 239);
     Tft.setPage(0, 319);
     Tft.sendCMD(0x2c);                                                  /* start to write to display ram */
 
     TFT_DC_HIGH;
     TFT_CS_LOW;
+
+#if defined(__LINKIT_ONE__)
+	SPI.write(bg_buffer, 153600);
+#else
     for(INT16U i=0; i<38400; i++)
     {
         SPI.transfer(0);
@@ -243,6 +288,7 @@ void TFT::fillScreen(void)
         SPI.transfer(0);
         SPI.transfer(0);
     }
+#endif
     TFT_CS_HIGH;
 }
 
@@ -256,7 +302,6 @@ void TFT::setXY(INT16U poX, INT16U poY)
 
 void TFT::setPixel(INT16U poX, INT16U poY,INT16U color)
 {
-
     sendCMD(0x2A);                                                      /* Column Command address       */
     sendData(poX);
     sendData(poX);
@@ -266,7 +311,6 @@ void TFT::setPixel(INT16U poX, INT16U poY,INT16U color)
     sendData(poY);
     
     sendCMD(0x2c);
-
     sendData(color);
 }
 
