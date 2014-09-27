@@ -30,9 +30,14 @@ drawHorizontalLine	KEYWORD2
 drawRectangle	KEYWORD2
 drawCircle	KEYWORD2
 fillCircle	KEYWORD2
-drawTraingle	KEYWORD2
+drawTriangle	KEYWORD2
 drawNumber	KEYWORD2
 drawFloat	KEYWORD2
+setSpacing	KEYWORD2
+setBold	KEYWORD2
+setThin	KEYWORD2
+setTall	KEYWORD2
+setWide	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
