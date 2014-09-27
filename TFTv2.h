@@ -1,7 +1,7 @@
 /*
  2012 Copyright (c) Seeed Technology Inc.
 
- Authors: Albert.Miao & Loovee, 
+ Authors: Albert.Miao & Loovee,
  Visweswara R (with initializtion code from TFT vendor)
 
  This library is free software; you can redistribute it and/or
@@ -41,10 +41,10 @@
 #define WHITE	0xffff
 
 //Other Colors
-#define CYAN		0x07ff	
-#define BRIGHT_RED	0xf810	
-#define GRAY1		0x8410  
-#define GRAY2		0x4208  
+#define CYAN		0x07ff
+#define BRIGHT_RED	0xf810
+#define GRAY1		0x8410
+#define GRAY2		0x4208
 
 //TFT resolution 240*320
 #define MIN_X	0
@@ -121,99 +121,103 @@ extern INT8U simpleFont[][8];
 
 class TFT
 {
+  private:
+    byte spacing;
+    byte widechar;
+    byte tallchar;
 
-private:
-
-
-
-public:
-
+  public:
     inline void sendCMD(INT8U index)
     {
-        TFT_DC_LOW;
-        TFT_CS_LOW;
-        SPI.transfer(index);
-        TFT_CS_HIGH;
+      TFT_DC_LOW;
+      TFT_CS_LOW;
+      SPI.transfer(index);
+      TFT_CS_HIGH;
     }
 
     inline void WRITE_DATA(INT8U data)
     {
-        TFT_DC_HIGH;
-        TFT_CS_LOW;
-        SPI.transfer(data);
-        TFT_CS_HIGH;
+      TFT_DC_HIGH;
+      TFT_CS_LOW;
+      SPI.transfer(data);
+      TFT_CS_HIGH;
     }
-    
+
     inline void sendData(INT16U data)
     {
-        INT8U data1 = data>>8;
-        INT8U data2 = data&0xff;
-        TFT_DC_HIGH;
-        TFT_CS_LOW;
-        SPI.transfer(data1);
-        SPI.transfer(data2);
-        TFT_CS_HIGH;
+      INT8U data1 = data >> 8;
+      INT8U data2 = data & 0xff;
+      TFT_DC_HIGH;
+      TFT_CS_LOW;
+      SPI.transfer(data1);
+      SPI.transfer(data2);
+      TFT_CS_HIGH;
     }
 
     void WRITE_Package(INT16U *data, INT8U howmany)
     {
-        INT16U  data1 = 0;
-        INT8U   data2 = 0;
+      INT16U  data1 = 0;
+      INT8U   data2 = 0;
 
-        TFT_DC_HIGH;
-        TFT_CS_LOW;
-        INT8U count=0;
-        for(count=0;count<howmany;count++)
-        {
-            data1 = data[count]>>8;
-            data2 = data[count]&0xff;
-            SPI.transfer(data1);
-            SPI.transfer(data2);
-        }
-        TFT_CS_HIGH;
+      TFT_DC_HIGH;
+      TFT_CS_LOW;
+      INT8U count = 0;
+      for (count = 0; count < howmany; count++)
+      {
+        data1 = data[count] >> 8;
+        data2 = data[count] & 0xff;
+        SPI.transfer(data1);
+        SPI.transfer(data2);
+      }
+      TFT_CS_HIGH;
     }
 
     INT8U Read_Register(INT8U Addr, INT8U xParameter)
     {
-        INT8U data=0;
-        sendCMD(0xd9);                                                      /* ext command                  */
-        WRITE_DATA(0x10+xParameter);                                        /* 0x11 is the first Parameter  */
-        TFT_DC_LOW;
-        TFT_CS_LOW;
-        SPI.transfer(Addr);
-        TFT_DC_HIGH;
-        data = SPI.transfer(0);
-        TFT_CS_HIGH;
-        return data;
+      INT8U data = 0;
+      sendCMD(0xd9);                                                      /* ext command                  */
+      WRITE_DATA(0x10 + xParameter);                                      /* 0x11 is the first Parameter  */
+      TFT_DC_LOW;
+      TFT_CS_LOW;
+      SPI.transfer(Addr);
+      TFT_DC_HIGH;
+      data = SPI.transfer(0);
+      TFT_CS_HIGH;
+      return data;
     }
 
-    
-	void TFTinit (void);
-	void setCol(INT16U StartCol,INT16U EndCol);
-	void setPage(INT16U StartPage,INT16U EndPage);
-	void setXY(INT16U poX, INT16U poY);
-    void setPixel(INT16U poX, INT16U poY,INT16U color);
-	
-	void fillScreen(INT16U XL,INT16U XR,INT16U YU,INT16U YD,INT16U color);
-	void fillScreen(void);
-	INT8U readID(void);
-	
-	void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
-    void drawString(char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
-	void fillRectangle(INT16U poX, INT16U poY, INT16U length, INT16U width, INT16U color);
-	
-	void drawLine(INT16U x0,INT16U y0,INT16U x1,INT16U y1,INT16U color);
-    void drawVerticalLine(INT16U poX, INT16U poY,INT16U length,INT16U color);
-    void drawHorizontalLine(INT16U poX, INT16U poY,INT16U length,INT16U color);
-    void drawRectangle(INT16U poX, INT16U poY, INT16U length,INT16U width,INT16U color);
-	
-	void drawCircle(int poX, int poY, int r,INT16U color);
-    void fillCircle(int poX, int poY, int r,INT16U color);
-	
-	void drawTraingle(int poX1, int poY1, int poX2, int poY2, int poX3, int poY3, INT16U color);
-    INT8U drawNumber(long long_num,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
-    INT8U drawFloat(float floatNumber,INT8U decimal,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
-    INT8U drawFloat(float floatNumber,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
+    void TFTinit (void);
+    void setCol(INT16U StartCol, INT16U EndCol);
+    void setPage(INT16U StartPage, INT16U EndPage);
+    void setXY(INT16U poX, INT16U poY);
+    void setPixel(INT16U poX, INT16U poY, INT16U color);
+
+    void fillScreen(INT16U XL, INT16U XR, INT16U YU, INT16U YD, INT16U color);
+    void fillScreen(void);
+    INT8U readID(void);
+
+    void setSpacing(byte space);
+    void setBold();
+    void setThin();
+    void setTall();
+    void setWide();
+
+    void drawChar(INT8U ascii, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor);
+    void drawString(char *string, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor);
+    void fillRectangle(INT16U poX, INT16U poY, INT16U length, INT16U width, INT16U color);
+
+    void drawLine(INT16U x0, INT16U y0, INT16U x1, INT16U y1, INT16U color);
+    void drawVerticalLine(INT16U poX, INT16U poY, INT16U length, INT16U color);
+    void drawHorizontalLine(INT16U poX, INT16U poY, INT16U length, INT16U color);
+    void drawRectangle(INT16U poX, INT16U poY, INT16U length, INT16U width, INT16U color);
+
+    void drawCircle(int poX, int poY, int r, INT16U color);
+    void fillCircle(int poX, int poY, int r, INT16U color);
+
+    void drawTriangle(int poX1, int poY1, int poX2, int poY2, int poX3, int poY3, INT16U color);
+    INT8U drawNumber(long long_num, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor);
+    INT8U drawFloat(float floatNumber, INT8U decimal, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor);
+    INT8U drawFloat(float floatNumber, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor);
 
 };
 
