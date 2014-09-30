@@ -34,20 +34,21 @@ uint8_t bg_buffer[153600];
 void TFT::TFTinit (void)
 {
     SPI.begin();
-    
+
 #if defined(__LINKIT_ONE__)
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
     pinMode(7, OUTPUT);
     digitalWrite(5, LOW);
-    digitalWrite(7, HIGH);     
+    digitalWrite(7, HIGH);
 #endif
-    
+
     TFT_CS_HIGH;
     TFT_DC_HIGH;
-    
+
     INT8U i=0, TFTDriver=0;
+    
     for(i=0;i<3;i++)
     {
         TFTDriver = readID();
@@ -159,6 +160,7 @@ void TFT::TFTinit (void)
     delay(120);
     sendCMD(0x29);                                                      /* Display on                   */
     fillScreen();
+
 }
 
 INT8U TFT::readID(void)
@@ -244,8 +246,8 @@ void TFT::fillScreen(INT16U XL, INT16U XR, INT16U YU, INT16U YD, INT16U color)
     INT8U Hcolor = (color>>8)&0xff;
     INT8U Lcolor = color&0xff;
 
-#if defined(__LINKIT_ONE__)
-
+#if defined(__LINKIT_ONE__)         // no ok 
+// #if defined(__LINKIT_ONE__)&0    // ok
     for(unsigned long i=0; i<XY; i++)
     {
         bg_buffer[2*i]   = Hcolor;

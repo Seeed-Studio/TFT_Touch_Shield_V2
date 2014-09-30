@@ -58,8 +58,8 @@
 #define TFT_DC_HIGH     digitalWrite(6, HIGH)
 #define TFT_CS_LOW      digitalWrite(5, LOW)
 #define TFT_CS_HIGH     digitalWrite(5, HIGH)
-#define TFT_BL_OFF      digitalWrite(4, LOW)
-#define TFT_BL_ON       digitalWrite(4, HIGH)
+#define TFT_BL_OFF      digitalWrite(7, LOW)
+#define TFT_BL_ON       digitalWrite(7, HIGH)
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 
@@ -121,10 +121,6 @@ extern INT8U simpleFont[][8];
 
 class TFT
 {
-
-private:
-
-
 
 public:
 

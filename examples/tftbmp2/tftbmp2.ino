@@ -139,7 +139,7 @@ void loop()
         if (! bmpFile)
         {
             Serial.println("didnt find image");
-            while (1);
+            return;
         }
 
         if(! bmpReadHeader(bmpFile)) 
@@ -155,7 +155,7 @@ void loop()
         delay(1000);
     }
     
-    while(1);
+   // while(1);
 
 }
 
@@ -244,7 +244,7 @@ void bmpdraw(File f, int x, int y, int dir)
     Serial.println(" ms");
 }
 
-boolean bmpReadHeader(File f) 
+boolean bmpReadHeader(File f)
 {
     // read header
     uint32_t tmp;
