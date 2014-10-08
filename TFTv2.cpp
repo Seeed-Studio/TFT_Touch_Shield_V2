@@ -246,12 +246,11 @@ void TFT::fillScreen(INT16U XL, INT16U XR, INT16U YU, INT16U YD, INT16U color)
     INT8U Hcolor = (color>>8)&0xff;
     INT8U Lcolor = color&0xff;
 
-#if defined(__LINKIT_ONE__)         // no ok 
-// #if defined(__LINKIT_ONE__)&0    // ok
+#if defined(__LINKIT_ONE__)
     for(unsigned long i=0; i<XY; i++)
     {
-        bg_buffer[2*i]   = Hcolor;
-        bg_buffer[2*i+1] = Lcolor;
+        bg_buffer[2*i]   = Lcolor;              // 
+        bg_buffer[2*i+1] = Hcolor;
     }
     
     SPI.write(bg_buffer, 2*XY);
