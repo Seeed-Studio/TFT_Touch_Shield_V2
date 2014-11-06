@@ -323,7 +323,7 @@ void TFT::drawChar( INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgco
     }
     else
     {
-        ascii = '?'-32;
+        ascii = '?';
     }
     for (int i =0; i<FONT_X; i++ ) {
         INT8U temp = pgm_read_byte(&simpleFont[ascii-0x20][i]);
