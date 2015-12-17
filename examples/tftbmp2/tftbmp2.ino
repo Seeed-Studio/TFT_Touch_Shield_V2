@@ -14,7 +14,6 @@
 
 #include <SD.h>
 #include <SPI.h>
-#include <Streaming.h>
 
 #include "TFTv2.h"
 
