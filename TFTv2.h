@@ -89,6 +89,15 @@
 #define YM 18   // can be a digital pin, this is A0
 #define XP 21   // can be a digital pin, this is A3
 
+#elif defined(__arc__) /* Arduino101/Genuino101 specifics */
+
+#define TFT_DC_LOW      digitalWrite(6, LOW)
+#define TFT_DC_HIGH     digitalWrite(6, HIGH)
+#define TFT_CS_LOW      digitalWrite(5, LOW)
+#define TFT_CS_HIGH     digitalWrite(5, HIGH)
+#define TFT_BL_OFF      digitalWrite(7, LOW)
+#define TFT_BL_ON       digitalWrite(7, HIGH)
+
 #else
 #define TFT_CS_LOW  {DDRD |= 0x20;PORTD &=~ 0x20;}
 #define TFT_CS_HIGH {DDRD |= 0x20;PORTD |=  0x20;}

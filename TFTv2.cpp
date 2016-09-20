@@ -42,6 +42,13 @@ void TFT::TFTinit (void)
     pinMode(7, OUTPUT);
     digitalWrite(5, LOW);
     digitalWrite(7, HIGH);
+#elif defined(__arc__) /* Arduino101/Genuino101 specifics */
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
+    pinMode(7, OUTPUT);
+    digitalWrite(5, LOW);
+    digitalWrite(7, HIGH);
 #endif
 
     TFT_CS_HIGH;
@@ -167,6 +174,8 @@ INT8U TFT::readID(void)
 {
 
 #if defined(__LINKIT_ONE__)
+    return 1;
+#elif defined(__arc__) /* Arduino101/Genuino101 specifics */
     return 1;
 #endif
 
