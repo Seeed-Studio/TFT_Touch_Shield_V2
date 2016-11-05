@@ -20,7 +20,8 @@ For more information, please refer to [wiki page](http://www.seeedstudio.com/wik
 
 *) Requirements for ATTiny:
 [tinySPI Library](https://github.com/JChristensen/tinySPI)
-Wiring:
+
+**Wiring:**
 
 | Display  | ATTiny45/85 | Comment                          |
 | -------- | ----------- | -------------------------------- |
