@@ -21,7 +21,12 @@
 */
 
 #include <TFTv2.h>
+#if defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) 
+#include <tinySPI.h>
+#else
 #include <SPI.h>
+#endif#
+
 #define FONT_SPACE 6
 #define FONT_X 8
 #define FONT_Y 8
@@ -194,12 +199,16 @@ INT8U TFT::readID(void)
     
     if(!ToF)                                                            /* data!=ID                     */
     {
+#if defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) 
+	//we do not have a serial output available on these MCU's
+#else
         Serial.print("Read TFT ID failed, ID should be 0x09341, but read ID = 0x");
         for(i=0;i<3;i++)
         {
             Serial.print(data[i],HEX);
         }
         Serial.println();
+#endif		
     }
 
     return ToF;

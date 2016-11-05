@@ -30,7 +30,11 @@
 #endif
 #include <avr/pgmspace.h>
 
+#if defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) 
+#include <tinySPI.h>
+#else
 #include <SPI.h>
+#endif
 
 //Basic Colors
 #define RED		0xf800
@@ -97,6 +101,26 @@
 #define TFT_CS_HIGH     digitalWrite(5, HIGH)
 #define TFT_BL_OFF      digitalWrite(7, LOW)
 #define TFT_BL_ON       digitalWrite(7, HIGH)
+
+#elif defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) 
+#define TFT_CS_LOW  {DDRB |= 0x08;PORTB &=~ 0x08;}		//PB3
+#define TFT_CS_HIGH {DDRB |= 0x08;PORTB |=  0x08;}		//PB3
+/* Alternative to save a pin:
+#define TFT_CS_LOW  {DDRB |= 0x80;PORTB &=~ 0x80;}		//dummy only: PB7 does not exist in ATtiny85, pull CS permanently to low at display with a resistor
+#define TFT_CS_HIGH {DDRB |= 0x80;PORTB |=  0x80;}		//dummy only: PB7 does not exist in ATtiny85
+*/
+#define TFT_DC_LOW  {DDRB |= 0x10;PORTB &=~ 0x10;}		//PB4
+#define TFT_DC_HIGH {DDRB |= 0x10;PORTB |=  0x10;}		//PB4
+#define TFT_BL_OFF  {DDRB |= 0x40;PORTB &=~ 0x40;}		//dummy only: PB6 does not exist in ATtiny85
+#define TFT_BL_ON   {DDRB |= 0x40;PORTB |=  0x40;}		//dummy only: PB6 does not exist in ATtiny85
+#define TFT_RST_OFF {DDRB |= 0x40;PORTB |=  0x40;}		//dummy only: PB6 does not exist in ATtiny85
+#define TFT_RST_ON  {DDRB |= 0x40;PORTB &=~ 0x40;}		//dummy only: PB6 does not exist in ATtiny85
+
+/* pins are not used: */
+#define YP A2   // must be an analog pin, use "An" notation!
+#define XM A1   // must be an analog pin, use "An" notation!
+#define YM 14   // can be a digital pin, this is A0
+#define XP 17   // can be a digital pin, this is A3
 
 #else
 #define TFT_CS_LOW  {DDRD |= 0x20;PORTD &=~ 0x20;}

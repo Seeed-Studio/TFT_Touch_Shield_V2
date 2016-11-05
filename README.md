@@ -3,7 +3,7 @@ TFT_Touch_Shield_V2
 
 [![TFT_Touch_Shield_V2](http://www.seeedstudio.com/depot/images/product/2.8touch%20shieldv2.jpg)](http://www.seeedstudio.com/depot/28-tft-touch-shield-v20-p-1286.html?cPath=34_36)
 
-This is a multifunctional Arduino/Seeeduino/Arduino Mega compatible resistive touch screen. It can be used as display device or sketch pad.Compared with the previous version, 2.8’’TFT Touch Shield V1.0 , we replaced the screen driver with a more professional chip, ILI9341 driver, providing different pin-saving SPI communication without sacrificing the data transmitting speed. Due to the communication method change, programs developed for the original version need modifications before being transplanted to the new version. With a SD card module integrated also on this shield, this shield reserves great room for other expansions to your project.
+This is a multifunctional Arduino/Seeeduino/Arduino Mega **and ATTiny** *) compatible resistive touch screen. It can be used as display device or sketch pad.Compared with the previous version, 2.8’’TFT Touch Shield V1.0 , we replaced the screen driver with a more professional chip, ILI9341 driver, providing different pin-saving SPI communication without sacrificing the data transmitting speed. Due to the communication method change, programs developed for the original version need modifications before being transplanted to the new version. With a SD card module integrated also on this shield, this shield reserves great room for other expansions to your project.
 
 
 **Features**
@@ -14,10 +14,26 @@ This is a multifunctional Arduino/Seeeduino/Arduino Mega compatible resistive to
 - SPI pin-saving communication method
 - Full screen touch active range
 
-
-
 <br>
 For more information, please refer to [wiki page](http://www.seeedstudio.com/wiki/2.8%27%27_TFT_Touch_Shield_v2.0).
+
+
+*) Requirements for ATTiny:
+[tinySPI Library](https://github.com/JChristensen/tinySPI)
+Wiring:
+
+| Display  | ATTiny45/85 | Comment                          |
+| -------- | ----------- | -------------------------------- |
+| CS       | PB3 (Pin 2) | or tie to GND to save a PIN		|
+| DC       | PB4 (Pin 3) |                                  |
+| MISO     | MOIS(Pin 5) |                                  |
+| MOSI     | MISO(Pin 6) |                                  |
+| SCK      | SCK (Pin 7) |                                  |
+
+NOTE: using the USI interface as SPI is not the fast. Filling the whole display on init takes a few seconds.
+
+The setup should work with other ATTiny versions as well if the pin definitions in TVTv2.h are adjusted.
+
 
     
 ----
