@@ -14,7 +14,9 @@ This is a multifunctional Arduino/Seeeduino/Arduino Mega compatible resistive to
 - SPI pin-saving communication method
 - Full screen touch active range
 
+**Note**
 
+- example/paint needs library https://github.com/Seeed-Studio/Touch_Screen_Driver
 
 <br>
 For more information, please refer to [wiki page](http://www.seeedstudio.com/wiki/2.8%27%27_TFT_Touch_Shield_v2.0).
