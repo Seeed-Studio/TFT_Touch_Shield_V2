@@ -20,8 +20,7 @@ This is a multifunctional Arduino/Seeeduino/Arduino Mega compatible resistive to
 
 - example/paint needs library https://github.com/Seeed-Studio/Touch_Screen_Driver
 
-<br>
-For more information, please refer to [wiki page](http://wiki.seeedstudio.com/2.8inch_TFT_Touch_Shield_v2.0/).
+For more information, please refer to [wiki](http://wiki.seeedstudio.com/2.8inch_TFT_Touch_Shield_v2.0).
 
     
 ----
