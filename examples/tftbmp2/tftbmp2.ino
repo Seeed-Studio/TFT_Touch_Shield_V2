@@ -34,7 +34,6 @@
 */
 
 #include <SD.h>
-#include <SPI.h>
 
 #include "TFTv2.h"
 

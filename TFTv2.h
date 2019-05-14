@@ -29,8 +29,11 @@
 #include <WProgram.h>
 #endif
 #include <avr/pgmspace.h>
-
+#if KENDRYTE_K210
+#include <SPIClass.h>
+#else
 #include <SPI.h>
+#endif
 
 //Basic Colors
 #define RED		0xf800
@@ -52,7 +55,7 @@
 #define MAX_X	239
 #define MAX_Y	319
 
-#if defined(__LINKIT_ONE__)
+#if defined(__LINKIT_ONE__) || defined(ARDUINO_SAMD_VARIANT_COMPLIANCE) 
 
 #define TFT_DC_LOW      digitalWrite(6, LOW)
 #define TFT_DC_HIGH     digitalWrite(6, HIGH)
@@ -60,6 +63,13 @@
 #define TFT_CS_HIGH     digitalWrite(5, HIGH)
 #define TFT_BL_OFF      digitalWrite(7, LOW)
 #define TFT_BL_ON       digitalWrite(7, HIGH)
+#elif defined(KENDRYTE_K210)
+#define TFT_DC_LOW      digitalWrite(22, LOW)
+#define TFT_DC_HIGH     digitalWrite(22, HIGH)
+#define TFT_CS_LOW      digitalWrite(35, LOW)
+#define TFT_CS_HIGH     digitalWrite(35, HIGH)
+#define TFT_BL_OFF      digitalWrite(21, LOW)
+#define TFT_BL_ON       digitalWrite(21, HIGH)
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 

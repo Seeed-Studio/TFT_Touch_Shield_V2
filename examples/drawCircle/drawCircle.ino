@@ -5,7 +5,6 @@
 
 #include <stdint.h>
 #include <TFTv2.h>
-#include <SPI.h>
 
 void setup()
 {

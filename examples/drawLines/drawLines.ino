@@ -6,7 +6,6 @@
 
 #include <stdint.h>
 #include <TFTv2.h>
-#include <SPI.h>
 void setup()
 {
     TFT_BL_ON;                                  // turn on the background light

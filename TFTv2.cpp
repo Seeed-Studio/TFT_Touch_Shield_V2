@@ -21,7 +21,6 @@
 */
 
 #include <TFTv2.h>
-#include <SPI.h>
 #define FONT_SPACE 6
 #define FONT_X 8
 #define FONT_Y 8
@@ -35,13 +34,19 @@ void TFT::TFTinit (void)
 {
     SPI.begin();
 
-#if defined(__LINKIT_ONE__)
+#if defined(__LINKIT_ONE__) || defined(ARDUINO_SAMD_VARIANT_COMPLIANCE) 
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
     pinMode(7, OUTPUT);
     digitalWrite(5, LOW);
     digitalWrite(7, HIGH);
+#elif defined(KENDRYTE_K210)
+    pinMode(22, OUTPUT);
+    pinMode(21, OUTPUT);
+    pinMode(35, OUTPUT);
+    digitalWrite(35, LOW);
+    digitalWrite(21, HIGH);
 #elif defined(__arc__) /* Arduino101/Genuino101 specifics */
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
@@ -353,7 +358,7 @@ void TFT::drawString(char *string,INT16U poX, INT16U poY, INT16U size,INT16U fgc
     while(*string)
     {
         drawChar(*string, poX, poY, size, fgcolor);
-        *string++;
+        string++;
 
         if(poX < MAX_X)
         {

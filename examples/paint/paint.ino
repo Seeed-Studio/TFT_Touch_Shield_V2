@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <SeeedTouchScreen.h>
 #include <TFTv2.h>
-#include <SPI.h>
 
 int ColorPaletteHigh = 30;
 int color = WHITE;  //Paint brush color
