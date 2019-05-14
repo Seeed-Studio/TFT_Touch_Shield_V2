@@ -199,12 +199,12 @@ INT8U TFT::readID(void)
     
     if(!ToF)                                                            /* data!=ID                     */
     {
-        Serial.print("Read TFT ID failed, ID should be 0x09341, but read ID = 0x");
+        SERIAL.print("Read TFT ID failed, ID should be 0x09341, but read ID = 0x");
         for(i=0;i<3;i++)
         {
-            Serial.print(data[i],HEX);
+            SERIAL.print(data[i],HEX);
         }
-        Serial.println();
+        SERIAL.println();
     }
 
     return ToF;

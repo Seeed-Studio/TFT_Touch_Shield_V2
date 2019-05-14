@@ -35,6 +35,14 @@
 #include <SPI.h>
 #endif
 
+#ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
+  #define SERIAL SerialUSB
+  #define SYS_VOL   3.3
+#else
+  #define SERIAL Serial
+  #define SYS_VOL   5
+#endif
+
 //Basic Colors
 #define RED		0xf800
 #define GREEN	0x07e0

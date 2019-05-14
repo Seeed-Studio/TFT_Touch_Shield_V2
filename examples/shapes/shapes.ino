@@ -5,10 +5,10 @@
 
 void setup()
 {
-//    Serial.begin(115200);
+    SERIAL.begin(115200);
     TFT_BL_ON;                                          // turn on the background light
     Tft.TFTinit();                                      // init TFT library
-//    Serial.println("TFT init ....");
+    SERIAL.println("TFT init ....");
 }
 
 void loop()
@@ -18,7 +18,7 @@ void loop()
         Tft.drawCircle(119,160,r,random(0xFFFF));       //draw circle, center:(119, 160), color: random
     }
     delay(10);
-  //  Serial.println("loop ....");
+    SERIAL.println("loop ....");
 }
 /*********************************************************************************************************
   END FILE
