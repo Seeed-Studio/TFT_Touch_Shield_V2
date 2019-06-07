@@ -6,7 +6,7 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-
+TextOrientation	KEYWORD1
 
 
 #######################################
@@ -20,6 +20,16 @@ fillScreen	KEYWORD2
 fillScreen	KEYWORD2
 readID	KEYWORD2
 drawChar	KEYWORD2
+drawCharPortrait	KEYWORD2
+drawCharPortraitBackwards	KEYWORD2
+drawCharPortraitUpsideDown	KEYWORD2
+drawCharPortraitUpsideDownBackwards	KEYWORD2
+drawCharPortraitLandscape KEYWORKD2
+drawCharLandscape	KEYWORD2
+drawCharLandscapeBackwards	KEYWORD2
+drawCharLandscapeUpsideDown	KEYWORD2
+drawCharLandscapeUpsideDownBackwards	KEYWORD2
+drawCharLandscapeVertical	KEYWORD2
 drawString	KEYWORD2
 drawString	KEYWORD2
 fillRectangle	KEYWORD2

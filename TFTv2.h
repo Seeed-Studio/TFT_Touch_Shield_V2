@@ -146,6 +146,19 @@
 
 extern INT8U simpleFont[][8];
 
+enum TextOrientation {
+    PORTRAIT, // aka. normal mode
+    PORTRAIT_BACKWARDS,
+    PORTRAIT_UPSIDE_DOWN,
+    PORTRAIT_UPSIDE_DOWN_BACKWARDS,
+    PORTRAIT_VERTICAL,
+    LANDSCAPE,
+    LANDSCAPE_BACKWARDS,
+    LANDSCAPE_UPSIDE_DOWN,
+    LANDSCAPE_UPSIDE_DOWN_BACKWARDS,
+    LANDSCAPE_VERTICAL,
+};
+
 class TFT
 {
 
@@ -221,12 +234,32 @@ public:
 	void fillScreen(void);
 	INT8U readID(void);
 	
-	void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
-    void drawString(char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
-    void drawString(const char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor)
-    {
-        drawString((char*)string, poX, poY, size, fgcolor);
+	void drawCharLandscape(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharLandscapeBackwards(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharLandscapeUpsideDown(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharLandscapeUpsideDownBackwards(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharLandscapeVertical(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+
+	void drawCharPortrait(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharPortraitUpsideDown(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharPortraitVertical(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharPortraitBackwards(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+	void drawCharPortraitUpsideDownBackwards(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
+
+	void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor, TextOrientation orientation);
+	void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor) {
+        TextOrientation orientation = PORTRAIT;
+        drawChar(ascii, poX, poY, size, fgcolor, orientation);
     }
+	void drawString(char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor, TextOrientation orientation);
+	void drawString(char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor) {
+		TextOrientation orientation = PORTRAIT;
+		drawString(string, poX, poY, size, fgcolor, orientation);
+	}
+	void drawString(const char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor){
+		TextOrientation orientation = PORTRAIT;
+		drawString((char*)string, poX, poY, size, fgcolor, orientation);
+	}
     
 	void fillRectangle(INT16U poX, INT16U poY, INT16U length, INT16U width, INT16U color);
 	
@@ -242,6 +275,10 @@ public:
     INT8U drawNumber(long long_num,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
     INT8U drawFloat(float floatNumber,INT8U decimal,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
     INT8U drawFloat(float floatNumber,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor);
+
+private:
+
+	void reverse(char *string);
 
 };
 
