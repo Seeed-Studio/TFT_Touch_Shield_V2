@@ -329,18 +329,13 @@ void TFT::setPixel(INT16U poX, INT16U poY,INT16U color)
     sendData(color);
 }
 
-void TFT::drawChar( INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+void TFT::drawCharPortrait(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
-    if((ascii>=32)&&(ascii<=127))
-    {
-        ;
-    }
-    else
-    {
+    if(!((ascii>=32)&&(ascii<=127)))
         ascii = '?';
-    }
-    for (int i =0; i<FONT_X; i++ ) {
-        INT8U temp = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+
+    for (int i =0; i<FONT_X; i++) {
+        const INT8U temp = pgm_read_byte(&simpleFont[ascii-0x20][i]);
         for(INT8U f=0;f<8;f++)
         {
             if((temp>>f)&0x01)
@@ -351,23 +346,398 @@ void TFT::drawChar( INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgco
         }
 
     }
+
 }
 
-void TFT::drawString(char *string,INT16U poX, INT16U poY, INT16U size,INT16U fgcolor)
+void TFT::drawCharPortraitBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[7-i] = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+    }
+
+    for (int i=0; i<FONT_X; i++)
+    {
+        const INT8U temp = character[i];
+        for(INT8U f=0; f<8; f++)
+        {
+            if((temp>>f)&0x01)
+            {
+                fillRectangle(poX+i*size, poY+f*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharPortraitVertical(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[i] = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+    }
+    unsigned char res[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        int val = 0x00;
+        for(uint8_t j=0; j<8; j++)
+        {
+            if((character[i]>>j) & 0x01)
+            {
+                val = val | (1<<j);
+            }
+        }
+        res[i] = val;
+    }
+
+    for (int i=0; i<FONT_X; i++)
+    {
+        const INT8U temp = res[i];
+        for(INT8U f=0; f<8; f++)
+        {
+            if((temp>>f)&0x01)
+            {
+                fillRectangle(poY+i*size, poX+f*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharPortraitUpsideDown(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[i] = pgm_read_byte(&simpleFont[ascii-0x20][7-i]);
+    }
+    unsigned char res[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        int val = 0x00;
+        for(uint8_t j=0; j<8; j++)
+        {
+            if((character[j]>>i) & 0x01)
+            {
+                val = val | (1<<j);
+            }
+        }
+        res[7-i] = val;
+    }
+
+    for (int i=0; i<FONT_X; i++)
+    {
+        for(INT8U f=0;f<8;f++)
+        {
+            if((res[i]>>f)&0x01)
+            {
+                fillRectangle(poX+f*size, poY+i*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharPortraitUpsideDownBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[i] = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+    }
+    unsigned char res[8];
+    for(uint8_t i=0; i < 8; i++) 
+    {
+        int val = 0x00;
+        for(uint8_t j=0; j<8; j++)
+        {
+            if((character[j]>>i) & 0x01)
+            {
+                val = val | (1<<j);
+            }
+        }
+        res[7-i] = val;
+    }
+
+    for (int i=0; i<FONT_X; i++)
+    {
+        for(INT8U f=0;f<8;f++)
+        {
+            if((res[i]>>f)&0x01)
+            {
+                fillRectangle(poX+f*size, poY+i*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharLandscape(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[i] = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+    }
+    unsigned char res[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        int val = 0x00;
+        for(uint8_t j=0; j<8; j++)
+        {
+            if((character[j]>>i) & 0x01)
+            {
+                val = val | (1<<j);
+            }
+        }
+        res[7-i] = val;
+    }
+
+    for (int i=0; i<FONT_Y; i++)
+    {
+        for(INT8U f=0; f<8; f++)
+        {
+            if((res[i]>>f)&0x01)
+            {
+                fillRectangle(poY+i*size, poX+f*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharLandscapeBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[i] = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+    }
+    unsigned char res[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        int val = 0x00;
+        for(uint8_t j=0; j<8; j++)
+        {
+            if((character[j]>>i) & 0x01)
+            {
+                val = val | (1<<j);
+            }
+        }
+        res[i] = val;
+    }
+
+    for (int i=0; i<FONT_Y; i++)
+    {
+        for(INT8U f=0; f<8; f++)
+        {
+            if((res[i]>>f)&0x01)
+            {
+                fillRectangle(poY-i*size, poX-f*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharLandscapeUpsideDown(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    for (int i=0; i<FONT_Y; i++)
+    {
+        const INT8U temp = pgm_read_byte(&simpleFont[ascii-0x20][7-i]);
+        for(INT8U f=0; f<8; f++)
+        {
+            if((temp>>f)&0x01)
+            {
+                fillRectangle(poY+f*size, poX+i*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharLandscapeUpsideDownBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[i] = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+    }
+    unsigned char res[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        int val = 0x00;
+        for(uint8_t j=0; j < 8; j++)
+        {
+            if((character[j]>>i) & 0x01)
+            {
+                val = val | (1<<j);
+            }
+
+        }
+        res[i] = val;
+    }
+
+    for (int i=0; i<FONT_Y; i++)
+    {
+        for(INT8U f=0; f<8; f++)
+        {
+            if((res[i]>>f)&0x01)
+            {
+                fillRectangle(poY+i*size, poX+f*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+void TFT::drawCharLandscapeVertical(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
+{
+    if(!((ascii>=32)&&(ascii<=127)))
+        ascii = '?';
+
+    unsigned char character[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        character[i] = pgm_read_byte(&simpleFont[ascii-0x20][i]);
+    }
+    unsigned char res[8];
+    for(uint8_t i=0; i < 8; i++)
+    {
+        int val = 0x00;
+        for(uint8_t j=0; j<8; j++)
+        {
+            if((character[j]>>i) & 0x01)
+            {
+                val = val | (1<<j);
+            }
+        }
+        res[7-i] = val;
+    }
+
+    for (int i=0; i<FONT_Y; i++)
+    {
+        for(INT8U f=0; f<8; f++)
+        {
+            if((res[i]>>f)&0x01)
+            {
+                fillRectangle(poX+i*size, poY+f*size, size, size, fgcolor);
+            }
+
+        }
+
+    }
+
+}
+
+
+void TFT::drawString(char *string, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor, TextOrientation orientation)
+{
+    void (TFT::*drawFunc)(INT8U, INT16U, INT16U, INT16U, INT16U);
+    uint16_t max;
+    switch(orientation){
+        case PORTRAIT_BACKWARDS:
+            reverse(string);
+            drawFunc = &TFT::drawCharPortraitBackwards;
+            max = MAX_X;
+            break;
+        case PORTRAIT_UPSIDE_DOWN:
+            reverse(string);
+            drawFunc = &TFT::drawCharPortraitUpsideDown;
+            max = MAX_X;
+            break;
+        case PORTRAIT_UPSIDE_DOWN_BACKWARDS:
+            drawFunc = &TFT::drawCharPortraitUpsideDownBackwards;
+            max = MAX_X;
+            break;
+        case PORTRAIT_VERTICAL:
+            drawFunc = &TFT::drawCharPortraitVertical;
+            max = MAX_Y;
+            break;
+        case LANDSCAPE:
+            drawFunc = &TFT::drawCharLandscape;
+            max = MAX_Y;
+            break;
+        case LANDSCAPE_BACKWARDS:
+            reverse(string);
+            drawFunc = &TFT::drawCharLandscapeBackwards;
+            max = MAX_Y;
+            break;
+        case LANDSCAPE_UPSIDE_DOWN:
+            reverse(string);
+            drawFunc = &TFT::drawCharLandscapeUpsideDown;
+            max = MAX_Y;
+            break;
+        case LANDSCAPE_UPSIDE_DOWN_BACKWARDS:
+            drawFunc = &TFT::drawCharLandscapeUpsideDownBackwards;
+            max = MAX_Y;
+            break;
+        case LANDSCAPE_VERTICAL:
+            reverse(string);
+            drawFunc = &TFT::drawCharLandscapeVertical;
+            max = MAX_X;
+            break;
+        default:
+            drawFunc = &TFT::drawCharPortrait;
+            max = MAX_X;
+            break;
+    }
+
     while(*string)
     {
-        drawChar(*string, poX, poY, size, fgcolor);
+        (this->*drawFunc)(*string, poX, poY, size, fgcolor);
         string++;
 
-        if(poX < MAX_X)
+        if(poX < max)
         {
-            poX += FONT_SPACE*size;                                     /* Move cursor right            */
+            poX += FONT_SPACE*size;                                     /* Move cursor                    */
         }
     }
 }
 
-//fillRectangle(poX+i*size, poY+f*size, size, size, fgcolor);
+
 void TFT::fillRectangle(INT16U poX, INT16U poY, INT16U length, INT16U width, INT16U color)
 {
     fillScreen(poX, poX+length, poY, poY+width, color);
@@ -379,7 +749,7 @@ INT16U length,INT16U color)
     setCol(poX,poX + length);
     setPage(poY,poY);
     sendCMD(0x2c);
-    for(int i=0; i<length; i++)
+    for(INT16U i=0; i<length; i++)
     sendData(color);
 }
 
@@ -411,7 +781,7 @@ void TFT::drawVerticalLine( INT16U poX, INT16U poY, INT16U length,INT16U color)
     setCol(poX,poX);
     setPage(poY,poY+length);
     sendCMD(0x2c);
-    for(int i=0; i<length; i++)
+    for(INT16U i=0; i<length; i++)
     sendData(color);
 }
 
@@ -623,6 +993,30 @@ INT8U TFT::drawFloat(float floatNumber,INT16U poX, INT16U poY,INT16U size,INT16U
     }
     f += decimal;
     return f;
+}
+
+/* In-place string reversion.
+ * This is used for upside down string drawing: the advantage is that users
+ * can seamlessly use TFT::drawString without being bothered about formatting
+ */
+
+void TFT::reverse(char *string){
+    int length = 0;
+    while(*(string + length) != '\0') {
+        length++;
+    }
+
+    char *begin, *end, tmp;
+    begin = string;
+    end = string + length - 1;
+    for( int i = 0; i < length/2; i++) {
+        tmp = *end;
+        *end = *begin;
+        *begin = tmp;
+
+        begin++;
+        end--;
+    }
 }
 
 TFT Tft=TFT();
