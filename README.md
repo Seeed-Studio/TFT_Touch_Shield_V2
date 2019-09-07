@@ -1,3 +1,9 @@
+# DEPRECATED LIBRARY
+
+This library has been deprecated! We are leaving this up for historical and research purposes but archiving the repository.
+
+We are now only supporting the use of our [Seeed_Arduino_LCD](https://github.com/Seeed-Studio/Seeed_Arduino_LCD)
+
 TFT_Touch_Shield_V2
 ---------------------------------------------------------
 
