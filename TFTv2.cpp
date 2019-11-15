@@ -672,44 +672,6 @@ void TFT::drawCharLandscapeVertical(INT8U ascii, INT16U poX, INT16U poY,INT16U s
 
 }
 
-void TFT::drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor, TextOrientation orientation)
-{
-    void (TFT::*drawFunc)(INT8U, INT16U, INT16U, INT16U, INT16U);
-	switch(orientation){
-		case PORTRAIT_BACKWARDS:
-			drawFunc = &TFT::drawCharPortraitBackwards;
-		break;
-		case PORTRAIT_UPSIDE_DOWN:
-			drawFunc = &TFT::drawCharPortraitUpsideDown;
-		break;
-		case PORTRAIT_UPSIDE_DOWN_BACKWARDS:
-			drawFunc = &TFT::drawCharPortraitUpsideDownBackwards;
-		break;
-		case PORTRAIT_VERTICAL:
-			drawFunc = &TFT::drawCharPortraitVertical;
-		break;
-		case LANDSCAPE:
-			drawFunc = &TFT::drawCharLandscape;
-		break;
-		case LANDSCAPE_BACKWARDS:
-			drawFunc = &TFT::drawCharLandscapeBackwards;
-		break;
-		case LANDSCAPE_UPSIDE_DOWN:
-			drawFunc = &TFT::drawCharLandscapeUpsideDown;
-		break;
-		case LANDSCAPE_UPSIDE_DOWN_BACKWARDS:
-			drawFunc = &TFT::drawCharLandscapeUpsideDownBackwards;
-		break;
-		case LANDSCAPE_VERTICAL:
-			drawFunc = &TFT::drawCharLandscapeVertical;
-		break;
-		default:
-			drawFunc = &TFT::drawCharPortrait;
-		break;
-	}
-	(this->*drawFunc)(ascii, poX, poY, size, fgcolor);
-}
-
 void TFT::drawString(char *string, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor, TextOrientation orientation)
 {
     void (TFT::*drawFunc)(INT8U, INT16U, INT16U, INT16U, INT16U);
@@ -881,7 +843,7 @@ INT8U TFT::drawNumber(long long_num,INT16U poX, INT16U poY,INT16U size,INT16U fg
     if (long_num < 0)
     {
         f=1;
-        drawChar('-',poX, poY, size, fgcolor);
+        drawString('-',poX, poY, size, fgcolor);
         long_num = -long_num;
         if(poX < MAX_X)
         {
@@ -891,7 +853,7 @@ INT8U TFT::drawNumber(long long_num,INT16U poX, INT16U poY,INT16U size,INT16U fg
     else if (long_num == 0)
     {
         f=1;
-        drawChar('0',poX, poY, size, fgcolor);
+        drawString('0',poX, poY, size, fgcolor);
         return f;
         if(poX < MAX_X)
         {
@@ -909,7 +871,7 @@ INT8U TFT::drawNumber(long long_num,INT16U poX, INT16U poY,INT16U size,INT16U fg
     f = f+i;
     for(; i > 0; i--)
     {
-        drawChar('0'+ char_buffer[i - 1],poX, poY, size, fgcolor);
+        drawString('0'+ char_buffer[i - 1],poX, poY, size, fgcolor);
         if(poX < MAX_X)
         {
             poX+=FONT_SPACE*size;                                       /* Move cursor right            */
@@ -926,7 +888,7 @@ INT8U TFT::drawFloat(float floatNumber,INT8U decimal,INT16U poX, INT16U poY,INT1
     INT8U f=0;
     if(floatNumber<0.0)
     {
-        drawChar('-',poX, poY, size, fgcolor);
+        drawString('-',poX, poY, size, fgcolor);
         floatNumber = -floatNumber;
         if(poX < MAX_X)
         {
@@ -950,7 +912,7 @@ INT8U TFT::drawFloat(float floatNumber,INT8U decimal,INT16U poX, INT16U poY,INT1
 
     if(decimal>0)
     {
-        drawChar('.',poX, poY, size, fgcolor);
+        drawString('.',poX, poY, size, fgcolor);
         if(poX < MAX_X)
         {
             poX+=FONT_SPACE*size;                                       /* Move cursor right            */
@@ -983,7 +945,7 @@ INT8U TFT::drawFloat(float floatNumber,INT16U poX, INT16U poY,INT16U size,INT16U
     INT8U f=0;
     if(floatNumber<0.0)                                                 /* floatNumber < 0              */
     {
-        drawChar('-',poX, poY, size, fgcolor);                          /* add a '-'                    */
+        drawString('-',poX, poY, size, fgcolor);                          /* add a '-'                    */
         floatNumber = -floatNumber;
         if(poX < MAX_X)
         {
@@ -1008,7 +970,7 @@ INT8U TFT::drawFloat(float floatNumber,INT16U poX, INT16U poY,INT16U size,INT16U
 
     if(decimal>0)
     {
-        drawChar('.',poX, poY, size, fgcolor);
+        drawString('.',poX, poY, size, fgcolor);
         if(poX < MAX_X)
         {
             poX += FONT_SPACE*size;                                     /* Move cursor right            */
