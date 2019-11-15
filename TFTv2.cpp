@@ -672,6 +672,43 @@ void TFT::drawCharLandscapeVertical(INT8U ascii, INT16U poX, INT16U poY,INT16U s
 
 }
 
+void TFT::drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor, TextOrientation orientation)
+{
+    void (TFT::*drawFunc)(INT8U, INT16U, INT16U, INT16U, INT16U);
+	switch(orientation){
+		case PORTRAIT_BACKWARDS:
+			drawFunc = &TFT::drawCharPortraitBackwards;
+		break;
+		case PORTRAIT_UPSIDE_DOWN:
+			drawFunc = &TFT::drawCharPortraitUpsideDown;
+		break;
+		case PORTRAIT_UPSIDE_DOWN_BACKWARDS:
+			drawFunc = &TFT::drawCharPortraitUpsideDownBackwards;
+		break;
+		case PORTRAIT_VERTICAL:
+			drawFunc = &TFT::drawCharPortraitVertical;
+		break;
+		case LANDSCAPE:
+			drawFunc = &TFT::drawCharLandscape;
+		break;
+		case LANDSCAPE_BACKWARDS:
+			drawFunc = &TFT::drawCharLandscapeBackwards;
+		break;
+		case LANDSCAPE_UPSIDE_DOWN:
+			drawFunc = &TFT::drawCharLandscapeUpsideDown;
+		break;
+		case LANDSCAPE_UPSIDE_DOWN_BACKWARDS:
+			drawFunc = &TFT::drawCharLandscapeUpsideDownBackwards;
+		break;
+		case LANDSCAPE_VERTICAL:
+			drawFunc = &TFT::drawCharLandscapeVertical;
+		break;
+		default:
+			drawFunc = &TFT::drawCharPortrait;
+		break;
+	}
+	(this->*drawFunc)(ascii, poX, poY, size, fgcolor);
+}
 
 void TFT::drawString(char *string, INT16U poX, INT16U poY, INT16U size, INT16U fgcolor, TextOrientation orientation)
 {
