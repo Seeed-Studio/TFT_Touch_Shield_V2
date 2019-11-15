@@ -246,11 +246,11 @@ public:
 	void drawCharPortraitBackwards(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
 	void drawCharPortraitUpsideDownBackwards(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor);
 
-	void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor, TextOrientation orientation);
-	void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor) {
-        TextOrientation orientation = PORTRAIT;
-        drawChar(ascii, poX, poY, size, fgcolor, orientation);
-    }
+	// void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor, TextOrientation orientation);
+	// void drawChar(INT8U ascii,INT16U poX, INT16U poY,INT16U size, INT16U fgcolor) {
+        // TextOrientation orientation = PORTRAIT;
+        // drawChar(ascii, poX, poY, size, fgcolor, orientation);
+    // }
 	void drawString(char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor, TextOrientation orientation);
 	void drawString(char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor) {
 		TextOrientation orientation = PORTRAIT;
