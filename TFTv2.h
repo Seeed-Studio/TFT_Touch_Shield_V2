@@ -256,10 +256,10 @@ public:
 		TextOrientation orientation = PORTRAIT;
 		drawString(string, poX, poY, size, fgcolor, orientation);
 	}
-	void drawString(const char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor){
-		TextOrientation orientation = PORTRAIT;
-		drawString((char*)string, poX, poY, size, fgcolor, orientation);
-	}
+// 	void drawString(const char *string,INT16U poX, INT16U poY,INT16U size,INT16U fgcolor){
+// 		TextOrientation orientation = PORTRAIT;
+// 		drawString((char*)string, poX, poY, size, fgcolor, orientation);
+// 	}
     
 	void fillRectangle(INT16U poX, INT16U poY, INT16U length, INT16U width, INT16U color);
 	
