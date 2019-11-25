@@ -25,7 +25,7 @@ This is a multifunctional Arduino/Seeeduino/Arduino Mega compatible resistive to
 **Note**
 
 - example/paint needs library https://github.com/Seeed-Studio/Touch_Screen_Driver
-
+- Due to example/tftbmp2 need a good of memory, don't support ATmega328P.
 For more information, please refer to [wiki](http://wiki.seeedstudio.com/2.8inch_TFT_Touch_Shield_v2.0).
 
     
