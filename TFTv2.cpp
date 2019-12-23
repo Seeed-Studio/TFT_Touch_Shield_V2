@@ -332,7 +332,7 @@ void TFT::setPixel(INT16U poX, INT16U poY,INT16U color)
 void TFT::drawCharPortrait(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     for (int i =0; i<FONT_X; i++) {
         const INT8U temp = pgm_read_byte(&simpleFont[ascii-0x20][i]);
@@ -352,7 +352,7 @@ void TFT::drawCharPortrait(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT1
 void TFT::drawCharPortraitBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -379,7 +379,7 @@ void TFT::drawCharPortraitBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U s
 void TFT::drawCharPortraitVertical(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -419,7 +419,7 @@ void TFT::drawCharPortraitVertical(INT8U ascii, INT16U poX, INT16U poY,INT16U si
 void TFT::drawCharPortraitUpsideDown(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -458,7 +458,7 @@ void TFT::drawCharPortraitUpsideDown(INT8U ascii, INT16U poX, INT16U poY,INT16U 
 void TFT::drawCharPortraitUpsideDownBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -497,7 +497,7 @@ void TFT::drawCharPortraitUpsideDownBackwards(INT8U ascii, INT16U poX, INT16U po
 void TFT::drawCharLandscape(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -536,7 +536,7 @@ void TFT::drawCharLandscape(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT
 void TFT::drawCharLandscapeBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -575,7 +575,7 @@ void TFT::drawCharLandscapeBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U 
 void TFT::drawCharLandscapeUpsideDown(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     for (int i=0; i<FONT_Y; i++)
     {
@@ -596,7 +596,7 @@ void TFT::drawCharLandscapeUpsideDown(INT8U ascii, INT16U poX, INT16U poY,INT16U
 void TFT::drawCharLandscapeUpsideDownBackwards(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -636,7 +636,7 @@ void TFT::drawCharLandscapeUpsideDownBackwards(INT8U ascii, INT16U poX, INT16U p
 void TFT::drawCharLandscapeVertical(INT8U ascii, INT16U poX, INT16U poY,INT16U size, INT16U fgcolor)
 {
     if(!((ascii>=32)&&(ascii<=127)))
-        ascii = "?";
+        ascii = '?';
 
     unsigned char character[8];
     for(uint8_t i=0; i < 8; i++)
@@ -839,7 +839,7 @@ INT8U TFT::drawNumber(long long_num,INT16U poX, INT16U poY,INT16U size,INT16U fg
     INT8U char_buffer[10] = "";
     INT8U i = 0;
     INT8U f = 0;
-
+    INT8U Str[2] = "";
     if (long_num < 0)
     {
         f=1;
@@ -871,7 +871,9 @@ INT8U TFT::drawNumber(long long_num,INT16U poX, INT16U poY,INT16U size,INT16U fg
     f = f+i;
     for(; i > 0; i--)
     {
-        drawString("0"+ char_buffer[i - 1],poX, poY, size, fgcolor);
+        Str[0] = '0'+ char_buffer[i - 1];
+        Str[1] = '\0';
+        drawString(Str,poX, poY, size, fgcolor);
         if(poX < MAX_X)
         {
             poX+=FONT_SPACE*size;                                       /* Move cursor right            */
@@ -1001,7 +1003,7 @@ INT8U TFT::drawFloat(float floatNumber,INT16U poX, INT16U poY,INT16U size,INT16U
 
 void TFT::reverse(char *string){
     int length = 0;
-    while(*(string + length) != "\0") {
+    while(*(string + length) != '\0') {
         length++;
     }
 
