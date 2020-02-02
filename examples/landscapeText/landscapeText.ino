@@ -4,14 +4,13 @@
 #include <stdint.h>
 #include <TFTv2.h>
 
-void setup()
-{
+void setup() {
     TFT_BL_ON;      // turn on the background light
     Tft.TFTinit();  // init TFT library
     Tft.fillScreen(0, 240, 0, 320, BLUE);
 
     Tft.drawString("original", 0, 14, 2, GREEN);
-    
+
     TextOrientation orientation;
     Tft.drawString("portrait", 140, 300, 2, YELLOW, orientation);
     orientation = PORTRAIT_BACKWARDS;
@@ -37,7 +36,6 @@ void setup()
     Tft.drawString("landscape vertical", 0, 0, 2, WHITE, orientation);
 }
 
-void loop()
-{
-  
+void loop() {
+
 }

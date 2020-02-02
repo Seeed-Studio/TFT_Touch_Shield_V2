@@ -1,17 +1,17 @@
 /*
-  SeeedTouchScreen.cpp - Library for 4-line resistance touch screen.
-  Modified by loovee Aug 12, 2012.
-  (c) ladyada / adafruit
-  Code under MIT License.
+    SeeedTouchScreen.cpp - Library for 4-line resistance touch screen.
+    Modified by loovee Aug 12, 2012.
+    (c) ladyada / adafruit
+    Code under MIT License.
 */
 
 #include "pins_arduino.h"
 #include "wiring_private.h"
 
 #if (defined(__AVR__) || defined(__SAMD21G18A__))
-#include <avr/pgmspace.h>
+    #include <avr/pgmspace.h>
 #else
-#include <pgmspace.h>
+    #include <pgmspace.h>
 #endif
 #include "SeeedTouchScreen.h"
 #include "Arduino.h"
@@ -31,21 +31,18 @@ Point::Point(void) {
     x = y = 0;
 }
 
-Point::Point(int x0, int y0, int z0)
-{
+Point::Point(int x0, int y0, int z0) {
     x = x0;
     y = y0;
     z = z0;
 }
 
-bool Point::operator==(Point p1)
-{
-    return  ((p1.x == x) && (p1.y == y) && (p1.z == z));
+bool Point::operator==(Point p1) {
+    return ((p1.x == x) && (p1.y == y) && (p1.z == z));
 }
 
-bool Point::operator!=(Point p1)
-{
-    return  ((p1.x != x) || (p1.y != y) || (p1.z != z));
+bool Point::operator!=(Point p1) {
+    return ((p1.x != x) || (p1.y != y) || (p1.z != z));
 }
 
 TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym) {
@@ -57,20 +54,22 @@ TouchScreen::TouchScreen(uint8_t xp, uint8_t yp, uint8_t xm, uint8_t ym) {
 
 #if AVERAGE
 #define AVERAGETIME 4
-int avr_analog(int adpin)
-{
+int avr_analog(int adpin) {
     int sum = 0;
     int max = 0;
     int min = 1024;
-    for(int i = 0; i<AVERAGETIME; i++)
-    {
+    for (int i = 0; i < AVERAGETIME; i++) {
         int tmp = analogRead(adpin);
-        if(tmp > max)max = tmp;
-        if(tmp < min)min = tmp;
+        if (tmp > max) {
+            max = tmp;
+        }
+        if (tmp < min) {
+            min = tmp;
+        }
         sum += tmp;
         //   sum+=analogRead(adpin);
     }
-    return (sum-min-max)/(AVERAGETIME-2);
+    return (sum - min - max) / (AVERAGETIME - 2);
 
 }
 #endif
@@ -78,10 +77,10 @@ int avr_analog(int adpin)
 Point TouchScreen::getPoint(void) {
     int x, y, z = 1;
     int samples[NUMSAMPLES];
-#if TSDEBUG
+    #if TSDEBUG
     int xx[2] = {0, 0};
     int yy[2] = {0, 0};
-#endif
+    #endif
     uint8_t i, valid;
 
     // uint8_t xp_port = digitalPinToPort(_xp);
@@ -106,25 +105,28 @@ Point TouchScreen::getPoint(void) {
     *portOutputRegister(digitalPinToPort(_xp)) |= xp_pin;
     *portOutputRegister(digitalPinToPort(_xm)) &= ~xm_pin;
 
-    for (i=0; i<NUMSAMPLES; i++)
-    {
-#if AVERAGE
+    for (i = 0; i < NUMSAMPLES; i++) {
+        #if AVERAGE
         samples[i] = avr_analog(_yp);
-#else
+        #else
         samples[i] = analogRead(_yp);
-#endif
+        #endif
 
-#if TSDEBUG
+        #if TSDEBUG
         xx[i] = samples[i];
-#endif
+        #endif
     }
 
-#if !COMP
-    if (samples[0] != samples[1]) { valid = 0; }
-#else
-    int icomp = samples[0]>samples[1]?samples[0]-samples[1]:samples[1] - samples[0];
-    if(icomp > COMP)valid = 0;
-#endif
+    #if !COMP
+    if (samples[0] != samples[1]) {
+        valid = 0;
+    }
+    #else
+    int icomp = samples[0] > samples[1] ? samples[0] - samples[1] : samples[1] - samples[0];
+    if (icomp > COMP) {
+        valid = 0;
+    }
+    #endif
 
     x = (samples[0] + samples[1]);
 
@@ -136,24 +138,28 @@ Point TouchScreen::getPoint(void) {
     *portOutputRegister(digitalPinToPort(_yp)) |= yp_pin;
     pinMode(_ym, OUTPUT);
 
-    for (i=0; i<NUMSAMPLES; i++) {
-#if AVERAGE
+    for (i = 0; i < NUMSAMPLES; i++) {
+        #if AVERAGE
         samples[i] = avr_analog(_xm);
-#else
+        #else
         samples[i] = analogRead(_xm);
-#endif
-#if TSDEBUG
+        #endif
+        #if TSDEBUG
         yy[i] = samples[i];
-#endif
+        #endif
     }
 
-#if !COMP
-    if (samples[0] != samples[1]) { valid = 0; }
-#else
-    icomp = samples[0]>samples[1]?samples[0]-samples[1]:samples[1] - samples[0];
-    if(icomp>COMP)valid = 0;
-#endif
-    y = (samples[0]+samples[0]);
+    #if !COMP
+    if (samples[0] != samples[1]) {
+        valid = 0;
+    }
+    #else
+    icomp = samples[0] > samples[1] ? samples[0] - samples[1] : samples[1] - samples[0];
+    if (icomp > COMP) {
+        valid = 0;
+    }
+    #endif
+    y = (samples[0] + samples[0]);
 
     pinMode(_xp, OUTPUT);
     *portOutputRegister(digitalPinToPort(_xp)) &= ~xp_pin;            // Set X+ to ground
@@ -168,7 +174,7 @@ Point TouchScreen::getPoint(void) {
     rtouch  = z2;
     rtouch /= z1;
     rtouch -= 1;
-    rtouch *= (2046-x)/2;
+    rtouch *= (2046 - x) / 2;
     rtouch *= RXPLATE;
     rtouch /= 1024;
     z = rtouch;
@@ -176,21 +182,23 @@ Point TouchScreen::getPoint(void) {
         z = 0;
     }
 
-#if TSDEBUG
-    if(z > __PRESSURE){
+    #if TSDEBUG
+    if (z > __PRESSURE) {
         Serial.print("x1 = "); Serial.print(xx[0]);
-        Serial.print("\tx2 = ");Serial.print(xx[1]);
-        Serial.print("\ty2 = ");Serial.print(yy[0]);
-        Serial.print("\ty2 = ");Serial.println(yy[1]);
+        Serial.print("\tx2 = "); Serial.print(xx[1]);
+        Serial.print("\ty2 = "); Serial.print(yy[0]);
+        Serial.print("\ty2 = "); Serial.println(yy[1]);
     }
-#endif
+    #endif
 
     return Point(x, y, z);
 }
 
-bool TouchScreen::isTouching(void)
-{
+bool TouchScreen::isTouching(void) {
     Point p = getPoint();
-    if(p.z > __PRESSURE)return 1;
-    else return 0;
+    if (p.z > __PRESSURE) {
+        return 1;
+    } else {
+        return 0;
+    }
 }

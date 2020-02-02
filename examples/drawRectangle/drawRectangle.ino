@@ -6,20 +6,18 @@
 #include <stdint.h>
 #include <TFTv2.h>
 
-void setup()
-{
+void setup() {
     TFT_BL_ON;      // turn on the background light
     Tft.TFTinit();  // init TFT library
 
-    Tft.fillScreen(80, 160, 50, 150,RED);
-    Tft.fillRectangle(30, 120, 100,65,YELLOW);
-    Tft.drawRectangle(100, 170, 120,60,BLUE);
+    Tft.fillScreen(80, 160, 50, 150, RED);
+    Tft.fillRectangle(30, 120, 100, 65, YELLOW);
+    Tft.drawRectangle(100, 170, 120, 60, BLUE);
 }
 
-void loop()
-{
-  
+void loop() {
+
 }
 /*********************************************************************************************************
-  END FILE
+    END FILE
 *********************************************************************************************************/

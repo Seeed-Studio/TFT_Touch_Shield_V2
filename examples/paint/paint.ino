@@ -13,19 +13,16 @@ unsigned int colors[8] = {BLACK, RED, GREEN, BLUE, CYAN, YELLOW, WHITE, GRAY1};
 
 TouchScreen ts = TouchScreen(XP, YP, XM, YM); //init TouchScreen port pins
 
-void setup()
-{
+void setup() {
     Tft.TFTinit();  //init TFT library
     Serial.begin(115200);
     //Draw the pallet
-    for(int i = 0; i<8; i++)
-    {
-        Tft.fillRectangle(i*30, 0, 30, ColorPaletteHigh, colors[i]);
+    for (int i = 0; i < 8; i++) {
+        Tft.fillRectangle(i * 30, 0, 30, ColorPaletteHigh, colors[i]);
     }
 }
 
-void loop()
-{
+void loop() {
     // a point object holds x y and z coordinates.
     Point p = ts.getPoint();
 
@@ -39,16 +36,13 @@ void loop()
 
     if (p.z > __PRESURE) {
         // Detect  paint brush color change
-        if(p.y < ColorPaletteHigh+2)
-        {
-            color = colors[p.x/30];
-        }
-        else
-        {
-            Tft.fillCircle(p.x,p.y,2,color);
+        if (p.y < ColorPaletteHigh + 2) {
+            color = colors[p.x / 30];
+        } else {
+            Tft.fillCircle(p.x, p.y, 2, color);
         }
     }
 }
 /*********************************************************************************************************
-  END FILE
+    END FILE
 *********************************************************************************************************/
