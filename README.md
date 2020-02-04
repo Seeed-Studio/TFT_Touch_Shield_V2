@@ -1,4 +1,4 @@
-# DEPRECATED LIBRARY
+# DEPRECATED LIBRARY  [![Build Status](https://travis-ci.com/Seeed-Studio/TFT_Touch_Shield_V2.svg?branch=master)](https://travis-ci.com/Seeed-Studio/TFT_Touch_Shield_V2)
 
 This library has been deprecated! We are leaving this up for historical and research purposes but archiving the repository.
 
