@@ -1,0 +1,113 @@
+language: generic
+matrix:
+  include:
+    - env:
+        - BOARD = "arduino:avr:uno"
+    - env:
+        - BOARD = "Seeeduino:samd:seeed_XIAO_m0"
+# default phases
+before_install:
+  - mkdir -p "$HOME/bin"
+  - curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | BINDIR="$HOME/bin" sh
+  - export PATH="$PATH:$HOME/bin"
+  - arduino-cli core update-index --additional-urls https://downloads.arduino.cc/packages/package_index.json
+  - arduino-cli core update-index --additional-urls https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json
+  - arduino-cli  core install arduino:avr --additional-urls https://downloads.arduino.cc/packages/package_index.json
+  - arduino-cli  core install Seeeduino:samd --additional-urls https://raw.githubusercontent.com/Seeed-Studio/Seeed_Platform/master/package_seeeduino_boards_index.json
+  - |
+    installLibrary() {
+      local -r repositoryFullName="$1"
+      local -r repositoryName="${repositoryFullName##*/}"
+      # clone repository to the libraries folder of the sketchbook
+      git clone https://github.com/${repositoryFullName} "${HOME}/Arduino/libraries/${repositoryName}"
+      cd "${HOME}/Arduino/libraries/${repositoryName}"
+      cd "${TRAVIS_BUILD_DIR}"
+    }
+- installLibrary Seeeed-Studio/TFT_Touch_Shield_V2
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch tftbmp;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch landscapeText;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch drawLines;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch tftbmp2;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch paint;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch drawNumber;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch drawRectangle;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch touchScreen;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch drawCircle;
+      fi
+    - |
+      if [ "$BOARD" == "arduino:avr:uno" ]; then
+        buildExampleSketch shapes;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch tftbmp;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch landscapeText;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch drawLines;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch tftbmp2;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch paint;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch drawNumber;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch drawRectangle;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch touchScreen;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch drawCircle;
+      fi
+    - |
+      if [ "$BOARD" == "Seeeduino:samd:seeed_XIAO_m0" ]; then
+        buildExampleSketch shapes;
+      fi
+notifications:
+  webhooks:
+    urls:
+      - https://www.travisbuddy.com/
+    on_success: never
+    on_failure: always
+
